@@ -1,0 +1,1 @@
+char * genRandPwd(int);
