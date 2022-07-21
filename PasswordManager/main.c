@@ -157,13 +157,17 @@ void initialLogin() {
             // Need to add valid input check
             getNameAndPass(enteredRootUName, enteredRootPW);
         } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
+        fclose(filePtr);
         
     } else {
         // create root login
         // rewind(filePtr);    // Go back to start of file
+        // Same file opens in firstLogin
+            // Need to close file
+            // Not sure this is good way to do it
+        fclose(filePtr);
         firstLogin(rootLogin);
     }
-    fclose(filePtr);
 }
 
 void rmWhtSpcEndStr(char str[]) {
