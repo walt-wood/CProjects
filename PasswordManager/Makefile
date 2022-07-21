@@ -10,5 +10,8 @@ menuFunctions.o: menuFunctions.c
 launch: PasswordManager
 	./PasswordManager
 
+debug:
+	gdb -q PasswordManager
+
 clean:
 	rm *.o PasswordManager

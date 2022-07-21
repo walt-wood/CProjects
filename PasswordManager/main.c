@@ -15,7 +15,6 @@
         // 5. Login feedback: The password or username was incorrect
         // 6. Command line arguments?
 
-// For future git ignores: nano ~/.gitignore_global
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +24,7 @@
 struct site
 {
     int id;
+    char sitename[50];
     char username[50];
     char password[50];
 };
@@ -109,8 +109,7 @@ void getNameAndPass(char username[], char password[]) {
     printf("Enter username: ");
     fgets(username, 50, stdin);    
     printf("Enter password: ");
-    fgets(password, 50, stdin);    
-    // Remove newline from fgets at end of input strings
+    fgets(password, 50, stdin);
     rmWhtSpcEndStr(username);
     rmWhtSpcEndStr(password);
 
@@ -130,7 +129,9 @@ void firstLogin(struct site root) {
     // Do not remove white space here, b/c we want to go to next line of file.
     // Manually set root.id, so it is ALWAYS 0
     root.id = 0;
-    fprintf(fPtr, "%d %s %s", root.id, root.username, root.password);
+    // Manually set root.sitename 
+    snprintf(root.sitename, 50, "%s", "root");
+    fprintf(fPtr, "%d %s %s %s", root.id, root.sitename, root.username, root.password);
     fclose(fPtr);
 }
 
