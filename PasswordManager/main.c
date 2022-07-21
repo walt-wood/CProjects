@@ -13,6 +13,7 @@
         // 3. Database for passwords and usernames
         // 4. Max login attempts
         // 5. Login feedback: The password or username was incorrect
+        // 6. Command line arguments?
 
 // For future git ignores: nano ~/.gitignore_global
 
@@ -32,6 +33,7 @@ void printMenu(int, char **);
 void createRandPW(char[], char *);
 void getNameAndPass(char[], char[]);
 void firstLogin(struct site);
+void initialLogin();
 // Need to remove white space at the end of strings for comparing
 // The build in function is cumbersome to type and this allows auto-completion
 void rmWhtSpcEndStr(char []);
@@ -39,54 +41,16 @@ void rmWhtSpcEndStr(char []);
 
 int main (void) {
         
+    initialLogin();
     
-    struct site newSite, rootLogin;
-
-    //rootLogin.id = 0;
-    FILE *filePtr;
-    char *fileName = "passwords.txt";
-
-
-    filePtr = fopen(fileName, "r");
-    fscanf(filePtr, "%d %s %s\n", &rootLogin.id, rootLogin.username, rootLogin.password);
-    char enteredRootUName[50];
-    char enteredRootPW[50];
-    if(rootLogin.id == 0) { // Root already created since we read 0 from file
-        
-        // Check root login credentials
-        
-        rmWhtSpcEndStr(rootLogin.username);
-        rmWhtSpcEndStr(rootLogin.password);
-        printf("%s %s - %s %s\n", rootLogin.username, rootLogin.password, enteredRootUName, enteredRootPW);
-        do {
-            system("cls");
-            // Need to add valid input check
-            getNameAndPass(enteredRootUName, enteredRootPW);
-        } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
-        
-    } else {
-        // create root login
-        // rewind(filePtr);    // Go back to start of file
-        firstLogin(rootLogin);
-    }
-    fclose(filePtr);
-
-    char * option1 = "1. Generate random password",
-         * option2 = "2. View all stored usernames and passwords",
-         * option3 = "3. Store username and password for site",
-         * option4 = "4. Modify username or password",
-         * option5 = "5. Delete record",
-         * option6 = "6. Modify master username or password",
-         * option7 = "7. Exit";
-
     char * options[7] = {
-        option1,
-        option2,
-        option3,
-        option4,
-        option5,
-        option6,
-        option7
+        "1. Generate random password",
+        "2. View all stored usernames and passwords",
+        "3. Store username and password for site",
+        "4. Modify username or password",
+        "5. Delete record",
+        "6. Modify master username or password",
+        "7. Exit"
     };
 
     int selection = 0;
@@ -94,19 +58,30 @@ int main (void) {
     char *selInPtr;
     char selInput[10];
 
-
     do {
         system("cls");
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
+        system("cls");
 
         switch (selection)
-        {
+        {            
         case 1:
             createRandPW(selInput, selInPtr);
             break;
-        default:
+        case 2:
+            viewPassWords();
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        default:            
             break;
         }
 
@@ -123,7 +98,6 @@ void printMenu(int numOptions, char * options[]) {
 }
 
 void createRandPW(char selInput[], char *selInPtr) {
-    system("cls");
     printf("Enter length for random password: ");
     fgets(selInput, 10, stdin);
     int pwLen = (int) strtol(selInput, &selInPtr, 10);
@@ -158,6 +132,38 @@ void firstLogin(struct site root) {
     root.id = 0;
     fprintf(fPtr, "%d %s %s", root.id, root.username, root.password);
     fclose(fPtr);
+}
+
+void initialLogin() {
+    struct site newSite, rootLogin;
+
+    //rootLogin.id = 0;
+    FILE *filePtr;
+    char *fileName = "passwords.txt";
+
+
+    filePtr = fopen(fileName, "r");
+    fscanf(filePtr, "%d %s %s\n", &rootLogin.id, rootLogin.username, rootLogin.password);
+    char enteredRootUName[50];
+    char enteredRootPW[50];
+    if(rootLogin.id == 0) { // Root already created since we read 0 from file
+        
+        // Check root login credentials
+        
+        rmWhtSpcEndStr(rootLogin.username);
+        rmWhtSpcEndStr(rootLogin.password);
+        do {
+            system("cls");
+            // Need to add valid input check
+            getNameAndPass(enteredRootUName, enteredRootPW);
+        } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
+        
+    } else {
+        // create root login
+        // rewind(filePtr);    // Go back to start of file
+        firstLogin(rootLogin);
+    }
+    fclose(filePtr);
 }
 
 void rmWhtSpcEndStr(char str[]) {

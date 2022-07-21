@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 char * genRandPwd(int length) {
     char * randStr;
@@ -35,3 +36,21 @@ char * genRandPwd(int length) {
 	
 	return randStr;
 } 
+
+void viewPassWords() {
+
+	FILE * fPtr;
+	fPtr = fopen("passwords.txt", "r");
+	char uName[50];
+	char pWord[50];
+	int id = -1;
+
+	while(fscanf(fPtr, "%d %s %s", &id, uName, pWord) != EOF) {
+		uName[strcspn(uName, "\r\n")] = 0;
+		pWord[strcspn(pWord, "\r\n")] = 0;
+		printf("Username: %-15s| Password: %-15s\n", uName, pWord);
+	}
+	getchar();
+	fclose(fPtr);
+
+}
