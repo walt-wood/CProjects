@@ -69,10 +69,8 @@ int main (void) {
         // rewind(filePtr);    // Go back to start of file
         firstLogin(rootLogin);
     }   
-    
+    // github test
     fclose(filePtr);
-    
-    getchar();
 
     char * option1 = "1. Generate random password",
          * option2 = "2. View all stored usernames and passwords",
