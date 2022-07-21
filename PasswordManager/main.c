@@ -144,7 +144,7 @@ void initialLogin() {
 
 
     filePtr = fopen(fileName, "r");
-    fscanf(filePtr, "%d %s %s\n", &rootLogin.id, rootLogin.username, rootLogin.password);
+    fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
     char enteredRootUName[50];
     char enteredRootPW[50];
     if(rootLogin.id == 0) { // Root already created since we read 0 from file
