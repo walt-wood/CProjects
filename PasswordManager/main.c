@@ -29,11 +29,11 @@ struct site
     char password[50];
 };
 
-void printMenu(int, char **);
-void createRandPW(char[], char *);
-void getNameAndPass(char[], char[]);
-void firstLogin(struct site);
-void initialLogin();
+static void printMenu(int, char **);
+static void createRandPW(char[], char *);
+static void getNameAndPass(char[], char[]);
+static void firstLogin(struct site);
+static void initialLogin();
 // Need to remove white space at the end of strings for comparing
 // The build in function is cumbersome to type and this allows auto-completion
 void rmWhtSpcEndStr(char []);
@@ -90,21 +90,21 @@ int main (void) {
     // free randStr
 }
 
-void printMenu(int numOptions, char * options[]) {
+static void printMenu(int numOptions, char * options[]) {
     // Assumes user has loggin in to pw manager
     for(int i = 0; i < numOptions; i++) {
         printf("%s\n", options[i]);
     }
 }
 
-void createRandPW(char selInput[], char *selInPtr) {
+static void createRandPW(char selInput[], char *selInPtr) {
     printf("Enter length for random password: ");
     fgets(selInput, 10, stdin);
     int pwLen = (int) strtol(selInput, &selInPtr, 10);
     genRandPwd(pwLen);
 }
 
-void getNameAndPass(char username[], char password[]) {
+static void getNameAndPass(char username[], char password[]) {
 
     printf("Enter username: ");
     fgets(username, 50, stdin);    
@@ -115,7 +115,7 @@ void getNameAndPass(char username[], char password[]) {
 
 }
 
-void firstLogin(struct site root) {
+static void firstLogin(struct site root) {
 
     FILE *fPtr = fopen("passwords.txt", "w");
     system("cls");
@@ -129,13 +129,13 @@ void firstLogin(struct site root) {
     // Do not remove white space here, b/c we want to go to next line of file.
     // Manually set root.id, so it is ALWAYS 0
     root.id = 0;
-    // Manually set root.sitename 
+    // Manually set root.sitename
     snprintf(root.sitename, 50, "%s", "root");
     fprintf(fPtr, "%d %s %s %s", root.id, root.sitename, root.username, root.password);
     fclose(fPtr);
 }
 
-void initialLogin() {
+static void initialLogin() {
     struct site newSite, rootLogin;
 
     //rootLogin.id = 0;
@@ -147,7 +147,7 @@ void initialLogin() {
     fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
     char enteredRootUName[50];
     char enteredRootPW[50];
-    if(rootLogin.id == 0) { // Root already created since we read 0 from file
+    if(rootLogin.id == 0 && strcmp(rootLogin.username, "root") == 0) { // Root already created since we read 0 from file
         
         // Check root login credentials
         
