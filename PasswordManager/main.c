@@ -68,8 +68,7 @@ int main (void) {
         // create root login
         // rewind(filePtr);    // Go back to start of file
         firstLogin(rootLogin);
-    }   
-    // github test
+    }
     fclose(filePtr);
 
     char * option1 = "1. Generate random password",
