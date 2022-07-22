@@ -14,6 +14,7 @@
         // 4. Max login attempts
         // 5. Login feedback: The password or username was incorrect
         // 6. Command line arguments?
+        // 7. menuFunctions.c -> Add more dynamic output for viewPasswords()
 
 
 #include <stdio.h>
@@ -32,11 +33,10 @@ struct site
 static void printMenu(int, char **);
 static void createRandPW(char[], char *);
 static void getNameAndPass(char[], char[]);
+static void storeNewCombo();
 static void firstLogin(struct site);
 static void initialLogin();
-// Need to remove white space at the end of strings for comparing
-// The build in function is cumbersome to type and this allows auto-completion
-void rmWhtSpcEndStr(char []);
+
 
 
 int main (void) {
@@ -46,7 +46,7 @@ int main (void) {
     char * options[7] = {
         "1. Generate random password",
         "2. View all stored usernames and passwords",
-        "3. Store username and password for site",
+        "3. Add new username and password for site",
         "4. Modify username or password",
         "5. Delete record",
         "6. Modify master username or password",
@@ -74,6 +74,7 @@ int main (void) {
             viewPassWords();
             break;
         case 3:
+            storeNewCombo();
             break;
         case 4:
             break;
@@ -115,10 +116,34 @@ static void getNameAndPass(char username[], char password[]) {
 
 }
 
+static void storeNewCombo() {
+
+    struct site newSite, parseSite;
+    
+    printf("Sitename: ");
+    fgets(newSite.sitename , 50, stdin);    
+    printf("Username: ");
+    fgets(newSite.username , 50, stdin);
+    printf("Password: ");
+    fgets(newSite.password, 50, stdin);
+
+    FILE * fPtr;
+    fPtr = fopen("passwords.txt", "r");
+
+    // get last index in file
+    while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
+    // increment id
+    fclose(fPtr);
+    fPtr = fopen("passwords.txt", "a");
+    newSite.id = parseSite.id++;
+    fprintf(fPtr, "%d %s %s %s", newSite.id, newSite.sitename, newSite.username, newSite.password);
+    fclose(fPtr);
+}
+
 static void firstLogin(struct site root) {
 
     FILE *fPtr = fopen("passwords.txt", "w");
-    system("cls");
+    // system("cls");
 
     printf("You have not set up a root login.\nPlease enter a username: ");
     fgets(root.username, 50, stdin);
@@ -136,7 +161,7 @@ static void firstLogin(struct site root) {
 }
 
 static void initialLogin() {
-    struct site newSite, rootLogin;
+    struct site rootLogin;
 
     //rootLogin.id = 0;
     FILE *filePtr;
@@ -147,7 +172,8 @@ static void initialLogin() {
     fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
     char enteredRootUName[50];
     char enteredRootPW[50];
-    if(rootLogin.id == 0 && strcmp(rootLogin.username, "root") == 0) { // Root already created since we read 0 from file
+   
+    if(rootLogin.id == 0 && strcmp(rootLogin.sitename, "root") == 0) { // Root already created since we read 0 from file
         
         // Check root login credentials
         
@@ -169,8 +195,4 @@ static void initialLogin() {
         fclose(filePtr);
         firstLogin(rootLogin);
     }
-}
-
-void rmWhtSpcEndStr(char str[]) {
-    str[strcspn(str, "\r\n")] = 0;
 }

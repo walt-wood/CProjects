@@ -1,10 +1,3 @@
-// Log in function
-// Generate random password of given length
-// View all the stored Username-Password combinations for a particular user.
-// Store a Username-Password combination for a site
-// Modify a previously stored Username-Password combination
-// Delete record
-// Modify master username and password
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -46,15 +39,19 @@ void viewPassWords() {
 	char pWord[50];
 	int id = -1;
 
-	printf("Sitename             | Username                  | Password          \n");
-	printf("---------------------------------------------------------------------\n");
+	printf("Sitename                       | Username                       | Password                    \n");
+	printf("----------------------------------------------------------------------------------------------\n");
 	while(fscanf(fPtr, "%d %s %s %s", &id, sName, uName, pWord) != EOF) {
-		sName[strcspn(sName, "\r\n")] = 0;
-		uName[strcspn(uName, "\r\n")] = 0;
-		pWord[strcspn(pWord, "\r\n")] = 0;
-		printf("%20s | %25s | %20s\n", sName, uName, pWord);
+		rmWhtSpcEndStr(sName);
+		rmWhtSpcEndStr(uName);
+		rmWhtSpcEndStr(pWord);
+		printf("%-30s | %-30s | %-30s\n", sName, uName, pWord);
 	}
 	getchar();
 	fclose(fPtr);
 
+}
+
+void rmWhtSpcEndStr(char str[]) {
+    str[strcspn(str, "\r\n")] = 0;
 }
