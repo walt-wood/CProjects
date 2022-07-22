@@ -15,6 +15,9 @@
         // 5. Login feedback: The password or username was incorrect
         // 6. Command line arguments?
         // 7. menuFunctions.c -> Add more dynamic output for viewPasswords()
+        // 8. Add pinter and malloc for variable length strings
+            // This implementation has some serious limitations
+        
 
 
 #include <stdio.h>
@@ -22,18 +25,9 @@
 #include "menuFunctions.h"
 #include <string.h>
 
-struct site
-{
-    int id;
-    char sitename[50];
-    char username[50];
-    char password[50];
-};
-
 static void printMenu(int, char **);
 static void createRandPW(char[], char *);
 static void getNameAndPass(char[], char[]);
-static void storeNewCombo();
 static void firstLogin(struct site);
 static void initialLogin();
 
@@ -59,11 +53,11 @@ int main (void) {
     char selInput[10];
 
     do {
-        system("cls");
+        //system("cls");
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
-        system("cls");
+        //system("cls");
 
         switch (selection)
         {            
@@ -116,29 +110,6 @@ static void getNameAndPass(char username[], char password[]) {
 
 }
 
-static void storeNewCombo() {
-
-    struct site newSite, parseSite;
-    
-    printf("Sitename: ");
-    fgets(newSite.sitename , 50, stdin);    
-    printf("Username: ");
-    fgets(newSite.username , 50, stdin);
-    printf("Password: ");
-    fgets(newSite.password, 50, stdin);
-
-    FILE * fPtr;
-    fPtr = fopen("passwords.txt", "r");
-
-    // get last index in file
-    while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
-    // increment id
-    fclose(fPtr);
-    fPtr = fopen("passwords.txt", "a");
-    newSite.id = parseSite.id++;
-    fprintf(fPtr, "%d %s %s %s", newSite.id, newSite.sitename, newSite.username, newSite.password);
-    fclose(fPtr);
-}
 
 static void firstLogin(struct site root) {
 

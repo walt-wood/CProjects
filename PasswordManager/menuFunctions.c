@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <menuFunctions.h>
+
 
 char * genRandPwd(int length) {
     char * randStr;
@@ -50,6 +52,33 @@ void viewPassWords() {
 	getchar();
 	fclose(fPtr);
 
+}
+
+void storeNewCombo() {
+
+    struct site newSite, parseSite;
+    
+    printf("Sitename: ");
+    fgets(newSite.sitename , 50, stdin);    
+    printf("Username: ");
+    fgets(newSite.username , 50, stdin);
+    printf("Password: ");
+    fgets(newSite.password, 50, stdin);
+
+    FILE * fPtr;
+    fPtr = fopen("passwords.txt", "r");
+
+    // get last index in file
+    while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
+    // increment id
+    fclose(fPtr);
+    fPtr = fopen("passwords.txt", "a");
+    newSite.id = parseSite.id + 1;
+    rmWhtSpcEndStr(newSite.sitename);
+    rmWhtSpcEndStr(newSite.username);
+    rmWhtSpcEndStr(newSite.password);
+    fprintf(fPtr, "%d %s %s %s\n", newSite.id, newSite.sitename, newSite.username, newSite.password);
+    fclose(fPtr);
 }
 
 void rmWhtSpcEndStr(char str[]) {
