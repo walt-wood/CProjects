@@ -6,7 +6,7 @@
 
 char * genRandPwd(int length) {
     char * randStr;
-	static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.-_+=':;?!@$^&*/%<>~`";
+	static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.-_+=?!@$^&*%<>~`";
 
 	if (length) {
 		srand((unsigned int) (time(NULL)));
