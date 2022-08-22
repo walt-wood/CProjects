@@ -1,5 +1,6 @@
 // Comment to test git on linux.
 // Test PAT 
+// Test credential manager
 // Log in function
 // Generate random password of given length
 // View all the stored Username-Password combinations for a particular user.
