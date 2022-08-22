@@ -53,11 +53,11 @@ int main (void) {
     char selInput[10];
 
     do {
-        //system("cls");
+        //system("clear");
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
-        //system("cls");
+        //system("clear");
 
         switch (selection)
         {            
@@ -114,7 +114,7 @@ static void getNameAndPass(char username[], char password[]) {
 static void firstLogin(struct site root) {
 
     FILE *fPtr = fopen("passwords.txt", "w");
-    // system("cls");
+    // system("clear");
 
     printf("You have not set up a root login.\nPlease enter a username: ");
     fgets(root.username, 50, stdin);
@@ -151,7 +151,7 @@ static void initialLogin() {
         rmWhtSpcEndStr(rootLogin.username);
         rmWhtSpcEndStr(rootLogin.password);
         do {
-            system("cls");
+            system("clear");
             // Need to add valid input check
             getNameAndPass(enteredRootUName, enteredRootPW);
         } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));

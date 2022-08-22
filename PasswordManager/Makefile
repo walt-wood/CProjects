@@ -15,3 +15,8 @@ debug:
 
 clean:
 	rm *.o PasswordManager
+
+git:
+	git add .
+	git commit -m "$m"
+	git push
