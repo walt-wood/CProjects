@@ -86,7 +86,7 @@ int main (void) {
 }
 
 static void printMenu(int numOptions, char * options[]) {
-    // Assumes user has loggin in to pw manager
+    // Assumes user has logged into pw manager
     for(int i = 0; i < numOptions; i++) {
         printf("%s\n", options[i]);
     }
