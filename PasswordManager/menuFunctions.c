@@ -80,6 +80,13 @@ void storeNewCombo() {
     fclose(fPtr);
 }
 
+void modUnamePwd() {
+    // fseek() Rtns file pointer to position saved by ftell()
+    // fseek(fPtr, 0, SEEK_CUR);
+    
+}
+
+
 void rmWhtSpcEndStr(char str[]) {
     str[strcspn(str, "\r\n")] = 0;
 }

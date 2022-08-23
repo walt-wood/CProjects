@@ -19,6 +19,8 @@
             // This implementation has some serious limitations
         // 9. Add pattern to password generator, so passwords are easier to remember.
             // Th1s!S@p@ssW0Rd*
+    // Code improvements
+    //    1. Use varaible length strings when applicable.
 
 
 #include <stdio.h>
