@@ -17,7 +17,8 @@
         // 7. menuFunctions.c -> Add more dynamic output for viewPasswords()
         // 8. Add pinter and malloc for variable length strings
             // This implementation has some serious limitations
-        
+        // 9. Add pattern to password generator, so passwords are easier to remember.
+            // Th1s!S@p@ssW0Rd*
 
 
 #include <stdio.h>
