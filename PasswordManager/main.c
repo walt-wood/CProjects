@@ -39,9 +39,9 @@ static void initialLogin();
 int main (void) {
 
     char clear[6] = "clear";
-#ifdef _WIN32
-    clear = "cls";
-#endif    
+    #ifdef _WIN32
+        strncpy(clear, "cls", 4);
+    #endif    
 
     initialLogin();
     
