@@ -37,7 +37,12 @@ static void initialLogin();
 
 
 int main (void) {
-        
+
+    char clear[6] = "clear";
+#ifdef _WIN32
+    clear = "cls";
+#endif    
+
     initialLogin();
     
     char * options[7] = {
@@ -56,7 +61,7 @@ int main (void) {
     char selInput[10];
 
     do {
-        //system("clear");
+        system(clear);
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
