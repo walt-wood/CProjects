@@ -21,6 +21,7 @@
             // Th1s!S@p@ssW0Rd*
     // Code improvements
     //    1. Use varaible length strings when applicable.
+    //    2. There is too much repeated code. It needs to be modularized for readability and flow.
 
 
 #include <stdio.h>
@@ -33,7 +34,7 @@ static void createRandPW(char[], char *);
 static void getNameAndPass(char[], char[]);
 static void firstLogin(struct site);
 static void initialLogin();
-
+static void getDelInx();
 
 
 int main (void) {
@@ -61,7 +62,7 @@ int main (void) {
     char selInput[10];
 
     do {
-        system(clear);
+        // system(clear);
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
@@ -79,8 +80,10 @@ int main (void) {
             storeNewCombo();
             break;
         case 4:
+            modUnamePwd();
             break;
         case 5:
+            getDelInx();            
             break;
         case 6:
             break;
@@ -159,7 +162,7 @@ static void initialLogin() {
         rmWhtSpcEndStr(rootLogin.username);
         rmWhtSpcEndStr(rootLogin.password);
         do {
-            system("clear");
+            // system("clear");
             // Need to add valid input check
             getNameAndPass(enteredRootUName, enteredRootPW);
         } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
@@ -174,4 +177,17 @@ static void initialLogin() {
         fclose(filePtr);
         firstLogin(rootLogin);
     }
+}
+
+static void getDelInx() {
+
+    int index = -1;
+    char inBuff[20];
+    char * inPtr;
+
+    printf("Enter index of entry to delete: ");
+    fgets(inBuff, 20, stdin);
+    index = (int) strtol(inBuff, &inPtr, 20);
+
+    delete(index);
 }

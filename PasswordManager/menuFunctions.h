@@ -10,3 +10,5 @@ char * genRandPwd(int);
 void viewPassWords();// The built in functionality is cumbersome. This allows auto-completion
 void storeNewCombo();
 void rmWhtSpcEndStr(char []);
+void modUnamePwd();
+void delete();
