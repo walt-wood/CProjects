@@ -22,6 +22,7 @@
     // Code improvements
     //    1. Use varaible length strings when applicable.
     //    2. There is too much repeated code. It needs to be modularized for readability and flow.
+    //    3. Add color to output
 
 
 #include <stdio.h>
