@@ -40,7 +40,7 @@ static void getDelInx();
 int main (void) {
 
     char clear[6] = "clear";
-    #if defined(WIN32)
+    #if defined(_WIN32)
         // if windows,use cls
         strncpy(clear, "cls", 4);
     #endif    
