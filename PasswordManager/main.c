@@ -15,7 +15,7 @@
         // 5. Login feedback: The password or username was incorrect
         // 6. Command line arguments?
         // 7. menuFunctions.c -> Add more dynamic output for viewPasswords()
-        // 8. Add pinter and malloc for variable length strings
+        // 8. Add pointer and malloc for variable length strings
             // This implementation has some serious limitations
         // 9. Add pattern to password generator, so passwords are easier to remember.
             // Th1s!S@p@ssW0Rd*
@@ -40,7 +40,8 @@ static void getDelInx();
 int main (void) {
 
     char clear[6] = "clear";
-    #ifdef _WIN32
+    #if defined(WIN32)
+        // if windows,use cls
         strncpy(clear, "cls", 4);
     #endif    
 
@@ -62,11 +63,11 @@ int main (void) {
     char selInput[10];
 
     do {
-        // system(clear);
+        system(clear);
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
-        //system("clear");
+        system(clear);
 
         switch (selection)
         {            
@@ -92,12 +93,9 @@ int main (void) {
         }
 
     } while(selection != 7);
-
-    // free randStr
 }
 
 static void printMenu(int numOptions, char * options[]) {
-    // Assumes user has logged into pw manager
     for(int i = 0; i < numOptions; i++) {
         printf("%s\n", options[i]);
     }
@@ -125,7 +123,6 @@ static void getNameAndPass(char username[], char password[]) {
 static void firstLogin(struct site root) {
 
     FILE *fPtr = fopen("passwords.txt", "w");
-    // system("clear");
 
     printf("You have not set up a root login.\nPlease enter a username: ");
     fgets(root.username, 50, stdin);
@@ -147,7 +144,7 @@ static void initialLogin() {
 
     //rootLogin.id = 0;
     FILE *filePtr;
-    char *fileName = "passwords.txt";
+    const char* const fileName = "passwords.txt";
 
 
     filePtr = fopen(fileName, "r");
@@ -156,9 +153,7 @@ static void initialLogin() {
     char enteredRootPW[50];
    
     if(rootLogin.id == 0 && strcmp(rootLogin.sitename, "root") == 0) { // Root already created since we read 0 from file
-        
-        // Check root login credentials
-        
+                      
         rmWhtSpcEndStr(rootLogin.username);
         rmWhtSpcEndStr(rootLogin.password);
         do {
@@ -191,3 +186,5 @@ static void getDelInx() {
 
     delete(index);
 }
+
+

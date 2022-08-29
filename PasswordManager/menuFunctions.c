@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -34,7 +35,8 @@ char * genRandPwd(int length) {
 void viewPassWords() {
 
 	FILE * fPtr;
-	fPtr = fopen("passwords.txt", "r");
+    const char* const fileName = "passwords.txt";
+	fPtr = fopen(fileName, "r");
 	char sName[50];
 	char uName[50];
 	char pWord[50];
@@ -48,9 +50,9 @@ void viewPassWords() {
 		rmWhtSpcEndStr(pWord);
 		printf("%-30s | %-30s | %-30s\n", sName, uName, pWord);
 	}
-	getchar();
-	fclose(fPtr);
 
+	fclose(fPtr);
+	getchar();
 }
 
 void storeNewCombo() {
@@ -65,13 +67,14 @@ void storeNewCombo() {
     fgets(newSite.password, 50, stdin);
 
     FILE * fPtr;
-    fPtr = fopen("passwords.txt", "r");
+    const char* const fileName = "passwords.txt";
+    fPtr = fopen(fileName, "r");
 
     // get last index in file
     while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
     // increment id
     fclose(fPtr);
-    fPtr = fopen("passwords.txt", "a");
+    fPtr = fopen(fileName, "a");
     newSite.id = parseSite.id + 1;
     rmWhtSpcEndStr(newSite.sitename);
     rmWhtSpcEndStr(newSite.username);
@@ -81,7 +84,7 @@ void storeNewCombo() {
 }
 
 void modUnamePwd() {
-   
+            
     int index = -1;
     char inBuff[20];
     char * inPtr;
@@ -90,6 +93,13 @@ void modUnamePwd() {
     printf("Enter index of entry you wish to change: ");
     fgets(inBuff, 20, stdin);
     index = (int) strtol(inBuff, &inPtr, 20);
+
+    if(!index) {
+        printf("Cannot modify master password here.\nChoose option 6 from main menu.");
+        getchar();
+        return;
+    }
+
     printf("Enter new sitename: ");
     fgets(newSite.sitename, 50, stdin);
     printf("Enter new username: ");
@@ -103,8 +113,8 @@ void modUnamePwd() {
     // fseek() Rtns file pointer to position saved by ftell()
     // fseek(fPtr, 0, SEEK_CUR);
     FILE * fPtr,* fPtr2;
-    char passFile[] = "passwords.txt";
-    char tmpFile[] = "temp.txt";
+    const char* const passFile = "passwords.txt";
+    const char* const tmpFile = "temp.txt";
 
     fPtr = fopen(passFile, "r+");    
     fPtr2 = fopen(tmpFile, "w");
@@ -133,11 +143,16 @@ void delete(int index) {
 
     // add logic to not remove root entry
     // if(index == 0)
+    if(!index) {
+        printf("Cannot delete master password.");
+        getchar();
+        return;
+    }
 
-    char passFile[] = "passwords.txt";
-    char tmpFile[] = "temp.txt";
+    const char* const passFile = "passwords.txt";
+    const char* const tmpFile = "temp.txt";
     struct site parseSite;
-    FILE * fPtr,* fPtr2;
+    FILE *fPtr, *fPtr2;
 
     fPtr = fopen(passFile, "r+");
     fPtr2 = fopen(tmpFile, "w");
@@ -162,3 +177,4 @@ void delete(int index) {
 void rmWhtSpcEndStr(char str[]) {
     str[strcspn(str, "\r\n")] = 0;
 }
+
