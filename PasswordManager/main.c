@@ -24,6 +24,12 @@
     //    2. There is too much repeated code. It needs to be modularized for readability and flow.
     //    3. Add color to output
 
+// To-Do
+// 1. Valid input checks throughout
+// 2. Test code for valid input checks
+//      a. Design use cases
+// 3. Redesign for better modularization
+// 4. Add more color to output
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +41,7 @@ static void createRandPW(char[], char *);
 static void getNameAndPass(char[], char[]);
 static void firstLogin(struct site);
 static void initialLogin();
+static int getModInx();
 static void getDelInx();
 
 
@@ -49,19 +56,20 @@ int main (void) {
     initialLogin();
     
     char * options[7] = {
-        "1. Generate random password",
-        "2. View all stored usernames and passwords",
-        "3. Add new username and password for site",
-        "4. Modify username or password",
-        "5. Delete record",
-        "6. Modify master username or password",
-        "7. Exit"
+        BLU"1."WHT" Generate random password",
+        BLU"2."WHT" View all stored usernames and passwords",
+        BLU"3."WHT" Add new username and password for site",
+        BLU"4."WHT" Modify username or password",
+        BLU"5."WHT" Delete record",
+        BLU"6."WHT" Modify master username or password",
+        BLU"7."WHT" Exit"RST
     };
 
     int selection = 0;
     int numOptions = 7;
     char *selInPtr;
     char selInput[10];
+    int index = -1;
 
     do {
         system(clear);
@@ -81,13 +89,17 @@ int main (void) {
         case 3:
             storeNewCombo();
             break;
-        case 4:
-            modUnamePwd();
+        case 4: 
+            index = getModInx();
+            if(index > 0) {
+                modUnamePwd(index);
+            }        
             break;
         case 5:
             getDelInx();            
             break;
         case 6:
+            modUnamePwd(0);
             break;
         default:            
             break;
@@ -119,7 +131,6 @@ static void getNameAndPass(char username[], char password[]) {
     rmWhtSpcEndStr(password);
 
 }
-
 
 static void firstLogin(struct site root) {
 
@@ -173,6 +184,24 @@ static void initialLogin() {
         fclose(filePtr);
         firstLogin(rootLogin);
     }
+}
+
+static int getModInx() {
+    int index = -1;
+    char inBuff[20];
+    char * inPtr;
+
+    printf("Enter index of entry you wish to change: ");
+    fgets(inBuff, 20, stdin);
+    index = (int) strtol(inBuff, &inPtr, 20);
+
+    if(!index) {
+        printf("Cannot modify master password here.\nChoose option 6 from main menu.");
+        getchar();
+        index = -1;
+    }
+
+    return index;
 }
 
 static void getDelInx() {

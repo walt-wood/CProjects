@@ -41,9 +41,9 @@ void viewPassWords() {
 	char uName[50];
 	char pWord[50];
 	int id = -1;
-
-	printf("Sitename                       | Username                       | Password                    \n");
-	printf("----------------------------------------------------------------------------------------------\n");
+    
+	printf(CYN "Sitename"WHT "                       |"CYN" Username                       "WHT"|"CYN" Password                    \n");
+	printf(MAG "----------------------------------------------------------------------------------------------\n" RST);
 	while(fscanf(fPtr, "%d %s %s %s", &id, sName, uName, pWord) != EOF) {
 		rmWhtSpcEndStr(sName);
 		rmWhtSpcEndStr(uName);
@@ -83,25 +83,17 @@ void storeNewCombo() {
     fclose(fPtr);
 }
 
-void modUnamePwd() {
+void modUnamePwd(int index) {
             
-    int index = -1;
-    char inBuff[20];
-    char * inPtr;
-    struct site newSite, parseSite;
-    
-    printf("Enter index of entry you wish to change: ");
-    fgets(inBuff, 20, stdin);
-    index = (int) strtol(inBuff, &inPtr, 20);
+    struct site newSite, parseSite;  
 
-    if(!index) {
-        printf("Cannot modify master password here.\nChoose option 6 from main menu.");
-        getchar();
-        return;
+    if(index) {
+        printf("Enter new sitename: ");
+        fgets(newSite.sitename, 50, stdin);
+    } else {        
+        snprintf(newSite.sitename, 50, "%s", "root");
     }
 
-    printf("Enter new sitename: ");
-    fgets(newSite.sitename, 50, stdin);
     printf("Enter new username: ");
     fgets(newSite.username, 50, stdin);
     printf("Enter new password: ");
@@ -141,8 +133,6 @@ void modUnamePwd() {
 
 void delete(int index) {
 
-    // add logic to not remove root entry
-    // if(index == 0)
     if(!index) {
         printf("Cannot delete master password.");
         getchar();
