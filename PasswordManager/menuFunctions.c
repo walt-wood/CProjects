@@ -23,11 +23,14 @@ char * genRandPwd(int length) {
 
 			randStr[length] = '\0';
 		}
-	}
 
-	printf("%s\n", randStr);
+	    printf("%s\n", randStr);
+
+    } else {
+        printf("Length must be longer than 0.");
+    }
+
 	getchar();
-
 	
 	return randStr;
 } 
@@ -66,6 +69,10 @@ void storeNewCombo() {
     printf("Password: ");
     fgets(newSite.password, 50, stdin);
 
+    rmWhtSpcEndStr(newSite.sitename);
+    rmWhtSpcEndStr(newSite.username);
+    rmWhtSpcEndStr(newSite.password);
+
     FILE * fPtr;
     const char* const fileName = "passwords.txt";
     fPtr = fopen(fileName, "r");
@@ -74,11 +81,9 @@ void storeNewCombo() {
     while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
     // increment id
     fclose(fPtr);
+    
     fPtr = fopen(fileName, "a");
     newSite.id = parseSite.id + 1;
-    rmWhtSpcEndStr(newSite.sitename);
-    rmWhtSpcEndStr(newSite.username);
-    rmWhtSpcEndStr(newSite.password);
     fprintf(fPtr, "%d %s %s %s\n", newSite.id, newSite.sitename, newSite.username, newSite.password);
     fclose(fPtr);
 }
@@ -120,7 +125,7 @@ void modUnamePwd(int index) {
         } else {
             // equal
             fprintf(fPtr2, "%d %s %s %s\n", parseSite.id, parseSite.sitename, parseSite.username, parseSite.password); 
-        }
+        }  
     };
     
     fclose(fPtr);

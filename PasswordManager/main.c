@@ -8,16 +8,15 @@
 // Modify master username and password
 
     // Features to add 
-        // 1. Button debouncing (press f1 for options);
-        // 2. Hashing names and passwords
-        // 3. Database for passwords and usernames
-        // 4. Max login attempts
-        // 5. Login feedback: The password or username was incorrect
-        // 6. Command line arguments?
-        // 7. menuFunctions.c -> Add more dynamic output for viewPasswords()
-        // 8. Add pointer and malloc for variable length strings
+        // Button debouncing (press f1 for options);
+        // Hashing names and passwords
+        // Database for passwords and usernames
+        // Max login attempts
+        // Login feedback: The password or username was incorrect
+        // Command line arguments?
+        // Add pointer and malloc for variable length strings
             // This implementation has some serious limitations
-        // 9. Add pattern to password generator, so passwords are easier to remember.
+        // - Add pattern to password generator, so passwords are easier to remember.
             // Th1s!S@p@ssW0Rd*
     // Code improvements
     //    1. Use varaible length strings when applicable.
@@ -30,11 +29,15 @@
 //      a. Design use cases
 // 3. Redesign for better modularization
 // 4. Add more color to output
+// 5. In firstLogin(), turn off ECHO of password input and verify password by making user type in twice.
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "menuFunctions.h"
 #include <string.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 static void printMenu(int, char **);
 static void createRandPW(char[], char *);
@@ -47,7 +50,7 @@ static void getDelInx();
 
 int main (void) {
 
-    char clear[6] = "clear";
+    char clear[] = "clear";
     #if defined(_WIN32)
         // if windows,use cls
         strncpy(clear, "cls", 4);
@@ -122,11 +125,24 @@ static void createRandPW(char selInput[], char *selInPtr) {
 }
 
 static void getNameAndPass(char username[], char password[]) {
-
+    
+    struct termios old, new;
+    
     printf("Enter username: ");
-    fgets(username, 50, stdin);    
+    fgets(username, 50, stdin);
     printf("Enter password: ");
+    
+    // Turn off ECHO for stdin
+    tcgetattr(fileno(stdin), &old);
+    new = old;
+    new.c_lflag &= ~ECHO;
+    tcsetattr(fileno(stdin), TCSAFLUSH, &new);
+
     fgets(password, 50, stdin);
+
+    // Restore ECHO for stdin
+    (void) tcsetattr(fileno(stdin), TCSAFLUSH, &old);
+
     rmWhtSpcEndStr(username);
     rmWhtSpcEndStr(password);
 
@@ -134,7 +150,8 @@ static void getNameAndPass(char username[], char password[]) {
 
 static void firstLogin(struct site root) {
 
-    FILE *fPtr = fopen("passwords.txt", "w");
+    const char* const fileName = "passwords.txt";
+    FILE *fPtr = fopen(fileName, "w");
 
     printf("You have not set up a root login.\nPlease enter a username: ");
     fgets(root.username, 50, stdin);
@@ -152,38 +169,34 @@ static void firstLogin(struct site root) {
 }
 
 static void initialLogin() {
+
     struct site rootLogin;
 
-    //rootLogin.id = 0;
-    FILE *filePtr;
     const char* const fileName = "passwords.txt";
 
-
-    filePtr = fopen(fileName, "r");
-    fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
-    char enteredRootUName[50];
-    char enteredRootPW[50];
+    if(!access(fileName, F_OK)) {
+        FILE *filePtr = fopen(fileName, "r"); 
+        fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
+        char enteredRootUName[50];
+        char enteredRootPW[50];
    
-    if(rootLogin.id == 0 && strcmp(rootLogin.sitename, "root") == 0) { // Root already created since we read 0 from file
-                      
-        rmWhtSpcEndStr(rootLogin.username);
-        rmWhtSpcEndStr(rootLogin.password);
-        do {
-            // system("clear");
-            // Need to add valid input check
-            getNameAndPass(enteredRootUName, enteredRootPW);
-        } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
-        fclose(filePtr);
-        
+        if(rootLogin.id == 0 && strcmp(rootLogin.sitename, "root") == 0) { // Root already created since we read 0 from file
+                          
+            rmWhtSpcEndStr(rootLogin.username);
+            rmWhtSpcEndStr(rootLogin.password);
+            do {
+                // system("clear");
+                // Need to add valid input check
+                getNameAndPass(enteredRootUName, enteredRootPW);
+            } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
+            fclose(filePtr);
+    
+        }
     } else {
         // create root login
-        // rewind(filePtr);    // Go back to start of file
-        // Same file opens in firstLogin
-            // Need to close file
-            // Not sure this is good way to do it
-        fclose(filePtr);
         firstLogin(rootLogin);
     }
+        
 }
 
 static int getModInx() {
