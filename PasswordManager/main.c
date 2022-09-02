@@ -31,6 +31,7 @@
 // 4. Add more color to output
 // 5. In firstLogin(), turn off ECHO of password input and verify password by making user type in twice.
 // Test make git with kde wallet off
+// Still testing KDE wallet
 
 #include <stdio.h>
 #include <stdlib.h>
