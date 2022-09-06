@@ -33,7 +33,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "menuFunctions.h"
+#include "menu.h"
 #include <string.h>
 #include <termios.h>
 #include <sys/types.h>
@@ -47,14 +47,15 @@ static void initialLogin();
 static int getModInx();
 static void getDelInx();
 
+#if defined(_WIN32)
+    // if windows,use cls
+    const char g_clear[] = "cls";
+#else
+    const char g_clear[] = "clear";
+#endif    
 
 int main (void) {
 
-    char clear[] = "clear";
-    #if defined(_WIN32)
-        // if windows,use cls
-        strncpy(clear, "cls", 4);
-    #endif    
 
     initialLogin();
     
@@ -75,11 +76,11 @@ int main (void) {
     int index = -1;
 
     do {
-        system(clear);
+        system(g_clear);
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
-        system(clear);
+        system(g_clear);
 
         switch (selection)
         {            
@@ -152,7 +153,8 @@ static void firstLogin(struct site root) {
 
     const char* const fileName = "passwords.txt";
     FILE *fPtr = fopen(fileName, "w");
-
+    
+    system(g_clear);
     printf("You have not set up a root login.\nPlease enter a username: ");
     fgets(root.username, 50, stdin);
     // Have to remove \n from end of string, so it's not printed in the file.
@@ -174,14 +176,19 @@ static void initialLogin() {
 
     const char* const fileName = "passwords.txt";
 
-    if(!access(fileName, F_OK)) {
+    if(access(fileName, F_OK)) {
+        // file passwords.txt does not exist
+        firstLogin(rootLogin);
+    
+    } else {
+        // file does exist
         FILE *filePtr = fopen(fileName, "r"); 
         fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
         char enteredRootUName[50];
         char enteredRootPW[50];
    
         if(rootLogin.id == 0 && strcmp(rootLogin.sitename, "root") == 0) { // Root already created since we read 0 from file
-                          
+            // file exists and root id established                          
             rmWhtSpcEndStr(rootLogin.username);
             rmWhtSpcEndStr(rootLogin.password);
             do {
@@ -190,13 +197,13 @@ static void initialLogin() {
                 getNameAndPass(enteredRootUName, enteredRootPW);
             } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
             fclose(filePtr);
-    
+            
+        } else {
+            // file exists but no root id
+            firstLogin(rootLogin);
         }
-    } else {
-        // create root login
-        firstLogin(rootLogin);
-    }
         
+    }
 }
 
 static int getModInx() {

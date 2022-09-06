@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include  "menuFunctions.h"
+#include  "menu.h"
 
 char * genRandPwd(int length) {
     char * randStr;

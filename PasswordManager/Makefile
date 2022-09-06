@@ -1,20 +1,20 @@
-PasswordManager: PasswordManager.o menuFunctions.o
-	gcc -std=c11 -Wall -fmax-errors=10 -Wextra PasswordManager.o menuFunctions.o -o PasswordManager
+PassMan: PassMan.o menu.o
+	gcc -std=c11 -Wall -fmax-errors=10 -Wextra PassMan.o menu.o -o PassMan
 
-PasswordManager.o: main.c menuFunctions.h
-	gcc -std=c11 -Wall -fmax-errors=10 -Wextra -c main.c -o PasswordManager.o
+PassMan.o: main.c menu.h
+	gcc -std=c11 -Wall -fmax-errors=10 -Wextra -c main.c -o PassMan.o
 
-menuFunctions.o: menuFunctions.c
-	gcc -std=c11 -Wall -fmax-errors=10 -Wextra -c menuFunctions.c -o menuFunctions.o
+menu.o: menu.c
+	gcc -std=c11 -Wall -fmax-errors=10 -Wextra -c menu.c -o menu.o
 
-launch: PasswordManager
-	./PasswordManager
+launch: PassMan
+	./PassMan
 
 debug:
-	gdb -q PasswordManager
+	gdb -q PassMan
 
 clean:
-	rm *.o PasswordManager
+	rm *.o PassMan
 
 git:
 	git add .
