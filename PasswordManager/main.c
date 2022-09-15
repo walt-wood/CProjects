@@ -29,15 +29,24 @@
 //      a. Design use cases
 // 3. Redesign for better modularization
 // 4. Add more color to output
-// 5. In firstLogin(), turn off ECHO of password input and verify password by making user type in twice.
+// 5. In firstLogin(), verify password by making user type in twice.
+// 6. In option 6, add code for root password check
+// 7. Non-repudiation: Keep list of access and/or when root password is changed?
+// 8. *************** Redesign using pointers. That was the whole point of the project. *************************
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
 #include <string.h>
 #include <termios.h>
-#include <sys/types.h>
 #include <unistd.h>
+
+//#if defined(_WIN32)
+//    // if windows,use cls
+//    const char CLEAR[] = "cls";
+//#else
+//    const char CLEAR[] = "clear";
+//#endif  
 
 static void printMenu(int, char **);
 static void createRandPW(char[], char *);
@@ -46,17 +55,11 @@ static void firstLogin(struct site);
 static void initialLogin();
 static int getModInx();
 static void getDelInx();
-
-#if defined(_WIN32)
-    // if windows,use cls
-    const char g_clear[] = "cls";
-#else
-    const char g_clear[] = "clear";
-#endif    
+int fileno(FILE *);
 
 int main (void) {
 
-
+    const char clear[] = "clear";
     initialLogin();
     
     char * options[7] = {
@@ -76,11 +79,11 @@ int main (void) {
     int index = -1;
 
     do {
-        system(g_clear);
+        system(clear);
         printMenu(numOptions, options);
         fgets(selInput, 10, stdin);
         selection = (int) strtol(selInput, &selInPtr, 10);
-        system(g_clear);
+        system(clear);
 
         switch (selection)
         {            
@@ -125,25 +128,24 @@ static void createRandPW(char selInput[], char *selInPtr) {
     genRandPwd(pwLen);
 }
 
-static void getNameAndPass(char username[], char password[]) {
-    
-    struct termios old, new;
+static void getNameAndPass(char username[], char password[]) {    
     
     printf("Enter username: ");
     fgets(username, 50, stdin);
     printf("Enter password: ");
     
     // Turn off ECHO for stdin
+    struct termios old, new;
     tcgetattr(fileno(stdin), &old);
     new = old;
-    new.c_lflag &= ~ECHO;
+    new.c_lflag &= ~ECHO;    
     tcsetattr(fileno(stdin), TCSAFLUSH, &new);
 
     fgets(password, 50, stdin);
 
     // Restore ECHO for stdin
     (void) tcsetattr(fileno(stdin), TCSAFLUSH, &old);
-
+    
     rmWhtSpcEndStr(username);
     rmWhtSpcEndStr(password);
 
@@ -151,11 +153,12 @@ static void getNameAndPass(char username[], char password[]) {
 
 static void firstLogin(struct site root) {
 
+    const char clear[] = "clear";
     const char* const fileName = "passwords.txt";
     FILE *fPtr = fopen(fileName, "w");
     
-    system(g_clear);
-    printf("You have not set up a root login.\nPlease enter a username: ");
+    system(clear);
+    printf("\nYou have not set up a root login.\nPlease enter a username: ");
     fgets(root.username, 50, stdin);
     // Have to remove \n from end of string, so it's not printed in the file.
     rmWhtSpcEndStr(root.username);
@@ -176,7 +179,8 @@ static void initialLogin() {
 
     const char* const fileName = "passwords.txt";
 
-    if(access(fileName, F_OK)) {
+    // if(access(fileName, F_OK)) {
+    if(!fopen(fileName, "r")) {
         // file passwords.txt does not exist
         firstLogin(rootLogin);
     
@@ -195,6 +199,7 @@ static void initialLogin() {
                 // system("clear");
                 // Need to add valid input check
                 getNameAndPass(enteredRootUName, enteredRootPW);
+                printf("\n");
             } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
             fclose(filePtr);
             
