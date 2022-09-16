@@ -34,8 +34,9 @@
 // 7. Non-repudiation: Keep list of access and/or when root password is changed?
 // 8. *************** Redesign using pointers. That was the whole point of the project. *************************
 
+// Added from /pman.lnk main branch.
 
-// Testing git branch. Added in testBranch branch.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
