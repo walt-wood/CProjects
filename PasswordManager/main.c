@@ -35,7 +35,6 @@
 // 8. *************** Redesign using pointers. That was the whole point of the project. *************************
 
 
-// Testing git branch. Added in testBranch branch.
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
