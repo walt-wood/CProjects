@@ -63,9 +63,9 @@ void storeNewCombo() {
     struct site newSite, parseSite;
     
     printf("Sitename: ");
-    fgets(newSite.sitename , 50, stdin);    
+    fgets(newSite.sitename, 50, stdin);    
     printf("Username: ");
-    fgets(newSite.username , 50, stdin);
+    fgets(newSite.username, 50, stdin);
     printf("Password: ");
     fgets(newSite.password, 50, stdin);
 
@@ -172,4 +172,3 @@ void delete(int index) {
 void rmWhtSpcEndStr(char str[]) {
     str[strcspn(str, "\r\n")] = 0;
 }
-

@@ -45,17 +45,10 @@
 #include <termios.h>
 #include <unistd.h>
 
-//#if defined(_WIN32)
-//    // if windows,use cls
-//    const char CLEAR[] = "cls";
-//#else
-//    const char CLEAR[] = "clear";
-//#endif  
-
 static void printMenu(int, char **);
-static void createRandPW(char[], char *);
-static void getNameAndPass(char[], char[]);
-static void firstLogin(struct site);
+static void createRandPW(char[], char *, int);
+static void getNameAndPass(char[], char[], int);
+static void firstLogin(struct site, int);
 static void initialLogin();
 static int getModInx();
 static void getDelInx();
@@ -80,19 +73,20 @@ int main (void) {
     int numOptions = 7;
     char *selInPtr;
     char selInput[10];
+    int buffLen = 10;
     int index = -1;
 
     do {
         system(clear);
         printMenu(numOptions, options);
-        fgets(selInput, 10, stdin);
-        selection = (int) strtol(selInput, &selInPtr, 10);
+        fgets(selInput, sizeof(selInput), stdin);
+        selection = (int) strtol(selInput, &selInPtr, buffLen);
         system(clear);
 
         switch (selection)
         {            
         case 1:
-            createRandPW(selInput, selInPtr);
+            createRandPW(selInput, selInPtr, buffLen);
             break;
         case 2:
             viewPassWords();
@@ -125,17 +119,17 @@ static void printMenu(int numOptions, char * options[]) {
     }
 }
 
-static void createRandPW(char selInput[], char *selInPtr) {
+static void createRandPW(char selInput[], char *selInPtr, int buffLen) {
     printf("Enter length for random password: ");
-    fgets(selInput, 10, stdin);
-    int pwLen = (int) strtol(selInput, &selInPtr, 10);
+    fgets(selInput, strlen(selInput), stdin);
+    int pwLen = (int) strtol(selInput, &selInPtr, buffLen);
     genRandPwd(pwLen);
 }
 
-static void getNameAndPass(char username[], char password[]) {    
+static void getNameAndPass(char username[], char password[], int buffLen) {
     
     printf("Enter username: ");
-    fgets(username, 50, stdin);
+    fgets(username, buffLen, stdin);
     printf("Enter password: ");
     
     // Turn off ECHO for stdin
@@ -145,7 +139,7 @@ static void getNameAndPass(char username[], char password[]) {
     new.c_lflag &= ~ECHO;    
     tcsetattr(fileno(stdin), TCSAFLUSH, &new);
 
-    fgets(password, 50, stdin);
+    fgets(password, buffLen, stdin);
 
     // Restore ECHO for stdin
     (void) tcsetattr(fileno(stdin), TCSAFLUSH, &old);
@@ -155,7 +149,7 @@ static void getNameAndPass(char username[], char password[]) {
 
 }
 
-static void firstLogin(struct site root) {
+static void firstLogin(struct site root, int buffLen) {
 
     const char clear[] = "clear";
     const char* const fileName = "passwords.txt";
@@ -163,16 +157,16 @@ static void firstLogin(struct site root) {
     
     system(clear);
     printf("\nYou have not set up a root login.\nPlease enter a username: ");
-    fgets(root.username, 50, stdin);
+    fgets(root.username, buffLen, stdin);
     // Have to remove \n from end of string, so it's not printed in the file.
     rmWhtSpcEndStr(root.username);
     printf("Please enter password: ");
-    fgets(root.password, 50, stdin);
+    fgets(root.password, buffLen, stdin);
     // Do not remove white space here, b/c we want to go to next line of file.
     // Manually set root.id, so it is ALWAYS 0
     root.id = 0;
     // Manually set root.sitename
-    snprintf(root.sitename, 50, "%s", "root");
+    snprintf(root.sitename, buffLen, "%s", "root");
     fprintf(fPtr, "%d %s %s %s", root.id, root.sitename, root.username, root.password);
     fclose(fPtr);
 }
@@ -186,7 +180,7 @@ static void initialLogin() {
     // if(access(fileName, F_OK)) {
     if(!fopen(fileName, "r")) {
         // file passwords.txt does not exist
-        firstLogin(rootLogin);
+        firstLogin(rootLogin, 50);
     
     } else {
         // file does exist
@@ -194,6 +188,7 @@ static void initialLogin() {
         fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
         char enteredRootUName[50];
         char enteredRootPW[50];
+        int buffLen = 50;
    
         if(rootLogin.id == 0 && strcmp(rootLogin.sitename, "root") == 0) { // Root already created since we read 0 from file
             // file exists and root id established                          
@@ -202,14 +197,14 @@ static void initialLogin() {
             do {
                 // system("clear");
                 // Need to add valid input check
-                getNameAndPass(enteredRootUName, enteredRootPW);
+                getNameAndPass(enteredRootUName, enteredRootPW, buffLen);
                 printf("\n");
             } while(strcmp(rootLogin.username, enteredRootUName) || strcmp(enteredRootPW, rootLogin.password));
             fclose(filePtr);
             
         } else {
             // file exists but no root id
-            firstLogin(rootLogin);
+            firstLogin(rootLogin, buffLen);
         }
         
     }
@@ -218,11 +213,12 @@ static void initialLogin() {
 static int getModInx() {
     int index = -1;
     char inBuff[20];
+    int buffLen = 20;
     char * inPtr;
 
     printf("Enter index of entry you wish to change: ");
-    fgets(inBuff, 20, stdin);
-    index = (int) strtol(inBuff, &inPtr, 20);
+    fgets(inBuff, buffLen, stdin);
+    index = (int) strtol(inBuff, &inPtr, buffLen);
 
     if(!index) {
         printf("Cannot modify master password here.\nChoose option 6 from main menu.");
@@ -237,13 +233,12 @@ static void getDelInx() {
 
     int index = -1;
     char inBuff[20];
+    int buffLen = 20;
     char * inPtr;
 
     printf("Enter index of entry to delete: ");
-    fgets(inBuff, 20, stdin);
-    index = (int) strtol(inBuff, &inPtr, 20);
+    fgets(inBuff, buffLen, stdin);
+    index = (int) strtol(inBuff, &inPtr, buffLen);
 
     delete(index);
 }
-
-
