@@ -20,7 +20,7 @@
             // Th1s!S@p@ssW0Rd*
     // Code improvements
     //    1. Use varaible length strings when applicable.
-    //    2. There is too much repeated code. It needs to be modularized for readability and flow.
+    //    2. There is too much repeated code. It needs to be modularized.
     //    3. Add color to output
 
 // To-Do
@@ -31,12 +31,8 @@
 // 4. Add more color to output
 // 5. In firstLogin(), verify password by making user type in twice.
 // 6. In option 6, add code for root password check
-// 7. Non-repudiation: Keep list of access and/or when root password is changed?
+// 7. Non-repudiation: Keep list of access and/or when root password changed.
 // 8. *************** Redesign using pointers. That was the whole point of the project. *************************
-// Added from /Repos main branch.
-// Added from /pman.lnk testPBranch
-// Added from /pman.lnk main branch.
-// Added from /Repos - testBranch
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,29 +81,29 @@ int main (void) {
 
         switch (selection)
         {            
-        case 1:
-            createRandPW(selInput, selInPtr, buffLen);
-            break;
-        case 2:
-            viewPassWords();
-            break;
-        case 3:
-            storeNewCombo();
-            break;
-        case 4: 
-            index = getModInx();
-            if(index > 0) {
-                modUnamePwd(index);
-            }        
-            break;
-        case 5:
-            getDelInx();            
-            break;
-        case 6:
-            modUnamePwd(0);
-            break;
-        default:            
-            break;
+            case 1:
+                createRandPW(selInput, selInPtr, buffLen);
+                break;
+            case 2:
+                viewPassWords();
+                break;
+            case 3:
+                storeNewCombo();
+                break;
+            case 4: 
+                index = getModInx();
+                if(index > 0) {
+                    modUnamePwd(index);
+                }        
+                break;
+            case 5:
+                getDelInx();            
+                break;
+            case 6:
+                modUnamePwd(0);
+                break;
+            default:            
+                break;
         }
 
     } while(selection != 7);
@@ -221,7 +217,7 @@ static int getModInx() {
     index = (int) strtol(inBuff, &inPtr, buffLen);
 
     if(!index) {
-        printf("Cannot modify master password here.\nChoose option 6 from main menu.");
+        printf("To modify root login, choose option 6 from main menu.");
         getchar();
         index = -1;
     }
