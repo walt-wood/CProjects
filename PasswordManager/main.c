@@ -32,14 +32,13 @@
 // 5. In firstLogin(), verify password by making user type in twice.
 // 6. In option 6, add code for root password check
 // 7. Non-repudiation: Keep list of access and/or when root password changed.
-// 8. *************** Redesign using pointers. That was the whole point of the project. *************************
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "menu.h"
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
+#include "menu.h"
 
 static void printMenu(int, char **);
 static void createRandPW(char[], char *, int);
@@ -52,7 +51,7 @@ int fileno(FILE *);
 
 int main (void) {
 
-    const char clear[] = "clear";
+    const char * clear = "clear";
     initialLogin();
     
     char * options[7] = {
@@ -67,9 +66,9 @@ int main (void) {
 
     int selection = 0;
     int numOptions = 7;
-    char *selInPtr;
-    char selInput[10];
+    char *selInPtr;    
     int buffLen = 10;
+    char selInput[buffLen];
     int index = -1;
 
     do {
