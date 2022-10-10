@@ -31,7 +31,7 @@
 // 4. Add more color to output
 // 5. In firstLogin(), verify password by making user type in twice.
 // 6. In option 6, add code for root password check
-// 7. Non-repudiation: Keep list of access and/or when root password changed.
+// 7. Non-repudiation: Keep list of access and/or when root password changed.b
 
 #include <stdio.h>
 #include <stdlib.h>

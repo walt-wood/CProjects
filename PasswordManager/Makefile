@@ -1,16 +1,20 @@
+# If next line commented, use make debug G="-ggdb" for line numbers in GDB.
+#G=-ggdb
+CFLAGS=-std=c11 $G -Wall -fmax-errors=10 -Wextra
+
 PassMan: PassMan.o menu.o
-	gcc -std=c11 -Wall -fmax-errors=10 -Wextra PassMan.o menu.o -o PassMan
+	gcc $G $(CFLAGS) PassMan.o menu.o -o PassMan
 
 PassMan.o: main.c menu.h
-	gcc -std=c11 -Wall -fmax-errors=10 -Wextra -c main.c -o PassMan.o
+	gcc $G $(CFLAGS) -c main.c -o PassMan.o
 
 menu.o: menu.c
-	gcc -std=c11 -Wall -fmax-errors=10 -Wextra -c menu.c -o menu.o
+	gcc $G $(CFLAGS) -c menu.c -o menu.o
 
-launch: PassMan
+launch: PassMan	
 	./PassMan
 
-debug:
+debug: PassMan	
 	gdb -q PassMan
 
 clean:
