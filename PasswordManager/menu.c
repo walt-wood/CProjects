@@ -29,7 +29,7 @@ char * genRandPwd(int length) {
     } else {
         printf("Length must be longer than 0.");
     }
-
+    
 	getchar();
 	
 	return randStr;

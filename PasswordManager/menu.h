@@ -13,7 +13,7 @@ struct site
 #define MAG   "\x1B[35m"
 #define CYN   "\x1B[36m"
 #define WHT   "\x1B[37m"
-#define RST "\x1B[0m"
+#define RST   "\x1B[0m"
 
 char * genRandPwd(int);
 void viewPassWords();

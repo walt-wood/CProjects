@@ -68,7 +68,7 @@ int main (void) {
     int numOptions = 7;
     char *selInPtr;    
     int buffLen = 10;
-    char selInput[buffLen];
+    char selInput[10];
     int index = -1;
 
     do {
@@ -116,7 +116,7 @@ static void printMenu(int numOptions, char * options[]) {
 
 static void createRandPW(char selInput[], char *selInPtr, int buffLen) {
     printf("Enter length for random password: ");
-    fgets(selInput, strlen(selInput), stdin);
+    fgets(selInput, 10, stdin);
     int pwLen = (int) strtol(selInput, &selInPtr, buffLen);
     genRandPwd(pwLen);
 }
