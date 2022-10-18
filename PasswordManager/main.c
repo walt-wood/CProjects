@@ -115,9 +115,23 @@ static void printMenu(int numOptions, char * options[]) {
 }
 
 static void createRandPW(char selInput[], char *selInPtr, int buffLen) {
-    printf("Enter length for random password: ");
-    fgets(selInput, 10, stdin);
-    int pwLen = (int) strtol(selInput, &selInPtr, buffLen);
+    const char * clear = "clear";
+    int pwLen = -1;
+
+    do {
+        system(clear);
+        printf("Enter length for random password: ");
+        fgets(selInput, 10, stdin);
+        pwLen = (int) strtol(selInput, &selInPtr, buffLen);
+        if(pwLen < 15) {
+            printf("Password should be at least 15 characters, but 26 would be better.\n");
+            getchar();
+        } else if (pwLen > 999) {
+            printf("It would take 5,783,128,169,837,158,197,871 years to break a 26 character password, so anything greater than 999 is unreasonable.\n");
+            getchar();
+        }
+        
+    } while(pwLen < 15 || pwLen > 999);
     genRandPwd(pwLen);
 }
 

@@ -6,29 +6,26 @@
 #include  "menu.h"
 
 char * genRandPwd(int length) {
+
+    // This function assumes input is valid, b/c it is checked in main.c within createRandPW()
     char * randStr;
 	static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_+=?!@$^&*%<>~";
+	
+    srand((unsigned int) (time(NULL)));
+    randStr = (char *) malloc((char) sizeof(char) * length);
 
-	if (length) {
-		srand((unsigned int) (time(NULL)));
-		randStr = (char *) malloc((char) sizeof(char) * length);
+    if (randStr) {
+        int l = (int) (sizeof (charset) - 1);
+        int key;
+        for(int inx = 0; inx < length; inx++) {
+            key = rand() % l;
+            randStr[inx] = charset[key];
+        }
 
-		if (randStr) {
-			int l = (int) (sizeof (charset) - 1);
-			int key;
-			for(int inx = 0; inx < length; inx++) {
-				key = rand() % l;
-				randStr[inx] = charset[key];
-			}
-
-			randStr[length] = '\0';
-		}
-
-	    printf("%s\n", randStr);
-
-    } else {
-        printf("Length must be longer than 0.");
+        randStr[length] = '\0';
     }
+
+    printf("%s\n", randStr);    
     
 	getchar();
 	
