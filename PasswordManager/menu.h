@@ -15,7 +15,7 @@ struct site
 #define WHT   "\x1B[37m"
 #define RST   "\x1B[0m"
 
-char * genRandPwd(int);
+void genRandPwd(int);
 void viewPassWords();
 void storeNewCombo();
 void modUnamePwd(int index);

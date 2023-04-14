@@ -5,7 +5,7 @@
 #include <string.h>
 #include  "menu.h"
 
-char * genRandPwd(int length) {
+void genRandPwd(int length) {
 
     // This function assumes input is valid, b/c it is checked in main.c within createRandPW()
     char * randStr;
@@ -28,8 +28,7 @@ char * genRandPwd(int length) {
     printf("%s\n", randStr);    
     
 	getchar();
-	
-	return randStr;
+	free(randStr);
 } 
 
 void viewPassWords() {

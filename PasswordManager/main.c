@@ -114,6 +114,10 @@ static void printMenu(int numOptions, char * options[]) {
     }
 }
 
+// 4/14/23 - Found bug somewhere during pw generator. Core dumped.
+// Enter length for random password: 456
+// malloc(): invalid next size (unsorted)
+// make: *** [Makefile:15: launch] Aborted (core dumped)
 static void createRandPW(char selInput[], char *selInPtr, int buffLen) {
     const char * clear = "clear";
     int pwLen = -1;
