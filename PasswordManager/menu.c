@@ -34,20 +34,22 @@ void genRandPwd(int length) {
 void viewPassWords() {
 
 	FILE * fPtr;
-    const char* const fileName = "passwords.txt";
-	fPtr = fopen(fileName, "r");
-	char sName[50];
-	char uName[50];
-	char pWord[50];
-	int id = -1;
+    const char* const fileName = "pwords.bin";
+	fPtr = fopen(fileName, "rb");
+	// char sName[50];
+	// char uName[50];
+	// char pWord[50];
+	// int id = -1;
+    struct site readSite;
     
 	printf(CYN "Sitename"WHT "                       |"CYN" Username                       "WHT"|"CYN" Password                    \n");
 	printf(MAG "----------------------------------------------------------------------------------------------\n" RST);
-	while(fscanf(fPtr, "%d %s %s %s", &id, sName, uName, pWord) != EOF) {
-		rmWhtSpcEndStr(sName);
-		rmWhtSpcEndStr(uName);
-		rmWhtSpcEndStr(pWord);
-		printf("%-30s | %-30s | %-30s\n", sName, uName, pWord);
+	// while(fscanf(fPtr, "%d %s %s %s", &id, sName, uName, pWord) != EOF) {
+    while (fread(&readSite, sizeof(readSite), 1, fPtr) == 1) {
+		rmWhtSpcEndStr(readSite.sitename);
+		rmWhtSpcEndStr(readSite.username);
+		rmWhtSpcEndStr(readSite.password);
+		printf("%-30s | %-30s | %-30s\n", readSite.sitename, readSite.username, readSite.password);
 	}
 
 	fclose(fPtr);
@@ -70,17 +72,19 @@ void storeNewCombo() {
     rmWhtSpcEndStr(newSite.password);
 
     FILE * fPtr;
-    const char* const fileName = "passwords.txt";
-    fPtr = fopen(fileName, "r");
+    const char* const fileName = "pwords.bin";
+    fPtr = fopen(fileName, "rb");
 
     // get last index in file
-    while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
-    // increment id
+    // while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF);
+    while (fread(&parseSite, sizeof(parseSite), 1, fPtr) == 1);
     fclose(fPtr);
     
-    fPtr = fopen(fileName, "a");
+    fPtr = fopen(fileName, "ab");
+    // increment id
     newSite.id = parseSite.id + 1;
-    fprintf(fPtr, "%d %s %s %s\n", newSite.id, newSite.sitename, newSite.username, newSite.password);
+    // fprintf(fPtr, "%d %s %s %s\n", newSite.id, newSite.sitename, newSite.username, newSite.password);
+    fwrite(&newSite, sizeof(newSite), 1, fPtr);
     fclose(fPtr);
 }
 
@@ -106,22 +110,28 @@ void modUnamePwd(int index) {
     // fseek() Rtns file pointer to position saved by ftell()
     // fseek(fPtr, 0, SEEK_CUR);
     FILE * fPtr,* fPtr2;
-    const char* const passFile = "passwords.txt";
+    const char* const passFile = "pwords.bin";
     const char* const tmpFile = "temp.txt";
 
-    fPtr = fopen(passFile, "r+");    
-    fPtr2 = fopen(tmpFile, "w");
-    while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF) {
+    fPtr = fopen(passFile, "r+b");    
+    fPtr2 = fopen(tmpFile, "wb");
+    // while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF) {
+    while (fread(&parseSite, sizeof(parseSite), 1, fPtr) == 1) {
         
         rmWhtSpcEndStr(parseSite.sitename);
         rmWhtSpcEndStr(parseSite.username);
         rmWhtSpcEndStr(parseSite.password);
         if(parseSite.id == index) {
-            fprintf(fPtr2, "%d %s %s %s\n", index, newSite.sitename, newSite.username, newSite.password);
+            // fprintf(fPtr2, "%d %s %s %s\n", index, newSite.sitename, newSite.username, newSite.password);
+            // manually assign the id to index when we reach the point of insertion
+            newSite.id = index;
+            fwrite(&newSite, sizeof(newSite), 1, fPtr2);
         } else {
-            // equal
-            fprintf(fPtr2, "%d %s %s %s\n", parseSite.id, parseSite.sitename, parseSite.username, parseSite.password); 
-        }  
+            // Otherwise, we store in temp.txt what we found in pwords.bin
+            fwrite(&parseSite, sizeof(parseSite), 1, fPtr2);
+        }
+        
+         
     };
     
     fclose(fPtr);
@@ -140,13 +150,13 @@ void delete(int index) {
         return;
     }
 
-    const char* const passFile = "passwords.txt";
+    const char* const passFile = "pwords.bin";
     const char* const tmpFile = "temp.txt";
     struct site parseSite;
     FILE *fPtr, *fPtr2;
 
-    fPtr = fopen(passFile, "r+");
-    fPtr2 = fopen(tmpFile, "w");
+    fPtr = fopen(passFile, "r+b");
+    fPtr2 = fopen(tmpFile, "wb");
     while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF) {
         
         rmWhtSpcEndStr(parseSite.sitename);

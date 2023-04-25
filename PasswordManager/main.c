@@ -165,8 +165,8 @@ static void getNameAndPass(char username[], char password[], int buffLen) {
 static void firstLogin(struct site root, int buffLen) {
 
     const char clear[] = "clear";
-    const char* const fileName = "passwords.txt";
-    FILE *fPtr = fopen(fileName, "w");
+    const char* const fileName = "pwords.bin";
+    FILE *fPtr = fopen(fileName, "wb");
     
     system(clear);
     printf("\nYou have not set up a root login.\nPlease enter a username: ");
@@ -180,7 +180,8 @@ static void firstLogin(struct site root, int buffLen) {
     root.id = 0;
     // Manually set root.sitename
     snprintf(root.sitename, buffLen, "%s", "root");
-    fprintf(fPtr, "%d %s %s %s", root.id, root.sitename, root.username, root.password);
+    // fprintf(fPtr, "%d %s %s %s", root.id, root.sitename, root.username, root.password);
+    fwrite(&root, sizeof(root), 1, fPtr);
     fclose(fPtr);
 }
 
@@ -188,17 +189,19 @@ static void initialLogin() {
 
     struct site rootLogin;
 
-    const char* const fileName = "passwords.txt";
+    const char* const fileName = "pwords.bin";
 
     // if(access(fileName, F_OK)) {
-    if(!fopen(fileName, "r")) {
-        // file passwords.txt does not exist
+    FILE *filePtr = fopen(fileName, "rb"); 
+    if(filePtr == 0) {
+        // file pwords.bin does not exist
         firstLogin(rootLogin, 50);
     
     } else {
         // file does exist
-        FILE *filePtr = fopen(fileName, "r"); 
-        fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
+        // FILE *filePtr = fopen(fileName, "rb"); 
+        // fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
+        fread(&rootLogin, sizeof(rootLogin), 1, filePtr);
         char enteredRootUName[50];
         char enteredRootPW[50];
         int buffLen = 50;

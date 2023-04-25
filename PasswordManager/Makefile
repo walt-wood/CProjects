@@ -1,5 +1,5 @@
 # If next line commented, use make debug G="-ggdb" for line numbers in GDB.
-#G=-ggdb
+G=-ggdb
 CFLAGS=-std=c11 $G -Wall -fmax-errors=10 -Wextra -lcrypto
 
 PassMan: PassMan.o menu.o encryption.o
