@@ -157,15 +157,19 @@ void delete(int index) {
 
     fPtr = fopen(passFile, "r+b");
     fPtr2 = fopen(tmpFile, "wb");
-    while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF) {
+    // while(fscanf(fPtr, "%d %s %s %s", &parseSite.id, parseSite.sitename, parseSite.username, parseSite.password) != EOF) {
+    while (fread(&parseSite, sizeof(parseSite), 1, fPtr) == 1) {
         
         rmWhtSpcEndStr(parseSite.sitename);
         rmWhtSpcEndStr(parseSite.username);
         rmWhtSpcEndStr(parseSite.password);
         if(parseSite.id < index) {
-           fprintf(fPtr2, "%d %s %s %s\n", parseSite.id, parseSite.sitename, parseSite.username, parseSite.password); 
+           // fprintf(fPtr2, "%d %s %s %s\n", parseSite.id, parseSite.sitename, parseSite.username, parseSite.password); 
+           fwrite(&parseSite, sizeof(parseSite), 1, fPtr2);
         } else if(parseSite.id > index) {
-           fprintf(fPtr2, "%d %s %s %s\n", parseSite.id - 1, parseSite.sitename, parseSite.username, parseSite.password);
+           // fprintf(fPtr2, "%d %s %s %s\n", parseSite.id - 1, parseSite.sitename, parseSite.username, parseSite.password);
+           parseSite.id--;
+           fwrite(&parseSite, sizeof(parseSite), 1, fPtr2);
         }
     };
     
