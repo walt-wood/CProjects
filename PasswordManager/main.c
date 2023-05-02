@@ -114,10 +114,6 @@ static void printMenu(int numOptions, char * options[]) {
     }
 }
 
-// 4/14/23 - Found bug somewhere during pw generator. Core dumped.
-// Enter length for random password: 456
-// malloc(): invalid next size (unsorted)
-// make: *** [Makefile:15: launch] Aborted (core dumped)
 static void createRandPW(char selInput[], char *selInPtr, int buffLen) {
     const char * clear = "clear";
     int pwLen = -1;
@@ -180,7 +176,6 @@ static void firstLogin(struct site root, int buffLen) {
     root.id = 0;
     // Manually set root.sitename
     snprintf(root.sitename, buffLen, "%s", "root");
-    // fprintf(fPtr, "%d %s %s %s", root.id, root.sitename, root.username, root.password);
     fwrite(&root, sizeof(root), 1, fPtr);
     fclose(fPtr);
 }
@@ -191,7 +186,6 @@ static void initialLogin() {
 
     const char* const fileName = "pwords.bin";
 
-    // if(access(fileName, F_OK)) {
     FILE *filePtr = fopen(fileName, "rb"); 
     if(filePtr == 0) {
         // file pwords.bin does not exist
@@ -199,8 +193,6 @@ static void initialLogin() {
     
     } else {
         // file does exist
-        // FILE *filePtr = fopen(fileName, "rb"); 
-        // fscanf(filePtr, "%d %s %s %s\n", &rootLogin.id, rootLogin.sitename, rootLogin.username, rootLogin.password);
         fread(&rootLogin, sizeof(rootLogin), 1, filePtr);
         char enteredRootUName[50];
         char enteredRootPW[50];
