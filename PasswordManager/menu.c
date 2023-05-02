@@ -4,7 +4,6 @@
 #include <time.h>
 #include <string.h>
 #include "menu.h"
-#include "encryption.h"
 
 void genRandPwd(int length) {
 
