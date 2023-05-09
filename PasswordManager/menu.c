@@ -38,13 +38,13 @@ void viewPassWords() {
 	fPtr = fopen(fileName, "rb");
     struct site readSite;
     
-	printf(CYN "Sitename"WHT "                       |"CYN" Username                       "WHT"|"CYN" Password                    \n");
-	printf(MAG "----------------------------------------------------------------------------------------------\n" RST);
+	printf(CYN "Sitename"WHT "                            |"CYN" Username                       "WHT"     |"CYN" Password                         \n");
+	printf(MAG "-------------------------------------------------------------------------------------------------------------\n" RST);
     while (fread(&readSite, sizeof(readSite), 1, fPtr) == 1) {
 		rmWhtSpcEndStr(readSite.sitename);
 		rmWhtSpcEndStr(readSite.username);
 		rmWhtSpcEndStr(readSite.password);
-		printf("%-30s | %-30s | %-30s\n", readSite.sitename, readSite.username, readSite.password);
+		printf("%-35s | %-35s | %-35s\n", readSite.sitename, readSite.username, readSite.password);
 	}
 
 	fclose(fPtr);
@@ -104,7 +104,7 @@ void modUnamePwd(int index) {
     
     FILE * fPtr,* fPtr2;
     const char* const passFile = "pwords.bin";
-    const char* const tmpFile = "temp.txt";
+    const char* const tmpFile = "temp.bin";
 
     fPtr = fopen(passFile, "r+b");    
     fPtr2 = fopen(tmpFile, "wb");
